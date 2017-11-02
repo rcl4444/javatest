@@ -1,0 +1,45 @@
+logging:
+  level: INFO
+  loggers:
+    cn.zhijian: DEBUG
+sessionStore:
+  factoryClass: cn.zhijian.passport.session.InMemorySessionStoreFactory 
+database:
+  driverClass: org.h2.Driver
+  user: sa
+  password: ''
+  url: jdbc:h2:./target/test
+  properties:
+    charSet: UTF-8
+  maxWaitForConnection: 1s
+  validationQuery: "/* MyService Health Check */ SELECT 1"
+  validationQueryTimeout: 3s
+  minSize: 8
+  maxSize: 32
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute
+smtp:
+  host: 'smtp.exmail.qq.com'
+  port: 465
+  username: 'gitlab@yunbaoguan.cn'
+  password: 'Yunbaoguan123'
+  transport: ssl
+  sender:
+    name: 'Notification'
+    email: 'gitlab@yunbaoguan.cn'
+site:
+  siteUrl: 'http://192.168.3.146:81/'
+  jwtKey: '12345678912345678912345678912345'
+  jwtCookieName: 'jwttoken'
+  jwtPrefix: 'jwttoken'
+swagger:
+  resourcePackage: cn.zhijian
+wx:
+  appID: 'wx96e84cff842c5029'
+  mchID: '1337386801'
+  key: 'zzsdnbhdnbyyqljlzzsdnbhdnbyyqljl'
+  cert: '/cert/apiclient_cert.p12'
+  notify: 'http://wx-test.yunbaoguan.cn/pay/wxnotify'
+
+  

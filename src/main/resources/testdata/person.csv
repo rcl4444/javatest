@@ -1,0 +1,5 @@
+id,username,password,name,email,mobile,avatarResourceId,realname,walletId
+1,test,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,Test User,test@test.com,15010000000,NULL,Test User,3a181dfb-844d-4294-b0f2-981e10388688
+2,spuser,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,Service Provider User,sp@test.com,15010000001,NULL,Test User,null
+3,zhang,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,zhang,test@test.com,15010000000,NULL,Test User,null
+4,li,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,li,test@test.com,15010000000,NULL,Test User,null

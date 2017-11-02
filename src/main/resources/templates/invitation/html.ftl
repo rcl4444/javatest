@@ -1,0 +1,1 @@
+Visit <a href='${link}'>Here</a> to Join

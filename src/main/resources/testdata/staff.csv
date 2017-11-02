@@ -1,0 +1,5 @@
+id,personId,corporateId,role,blocked
+1,1,346,OWNER,FALSE
+2,2,2,OWNER,FALSE
+3,3,346,STAFF,FALSE
+4,4,346,STAFF,FALSE

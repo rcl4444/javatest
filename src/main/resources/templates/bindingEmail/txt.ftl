@@ -1,0 +1,1 @@
+点击 链接 ${link} to Join

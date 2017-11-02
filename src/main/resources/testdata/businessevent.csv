@@ -1,0 +1,3 @@
+﻿eventname,sign,description,state,businesstype
+用户注册,register,用户注册,1,0
+公司审核通过,companyAudit,公司审核通过,1,1

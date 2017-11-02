@@ -1,0 +1,45 @@
+logging:
+  level: INFO
+  loggers:
+    cn.zhijian: DEBUG
+sessionStore:
+  factoryClass: cn.zhijian.passport.session.InMemorySessionStoreFactory 
+database:
+  driverClass: "__JDBC_DRIVER__"
+  user: "__JDBC_USER__"
+  password: "__JDBC_PASSWORD__"
+  url: "__JDBC_URL__"
+  properties:
+    charSet: UTF-8
+  maxWaitForConnection: 1s
+  validationQuery: "/* Passport Backend Health Check */ SELECT 1"
+  validationQueryTimeout: 3s
+  minSize: 8
+  maxSize: 32
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute
+smtp:
+  host: 'smtp.exmail.qq.com'
+  port: 465
+  username: 'gitlab@yunbaoguan.cn'
+  password: 'Yunbaoguan123'
+  transport: ssl
+  sender:
+    name: 'Notification'
+    email: 'gitlab@yunbaoguan.cn'
+site:
+  siteUrl: '__FRONTEND_URL__'
+  jwtKey: '12345678912345678912345678912345'
+  jwtCookieName: 'jwttoken'
+  jwtPrefix: 'jwttoken'
+swagger:
+  resourcePackage: cn.zhijian
+wx:
+  appID: 'wx96e84cff842c5029'
+  mchID: '1337386801'
+  key: 'zzsdnbhdnbyyqljlzzsdnbhdnbyyqljl'
+  cert: '/cert/apiclient_cert.p12'
+  notify: '__BACKEND_ENDPOINT__/pay/wxnotify'
+
+  

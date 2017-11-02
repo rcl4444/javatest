@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet id="snapshotevententry-create" author="kmtong">
+		<createTable tableName="SnapshotEventEntry">
+			<column name="aggregateIdentifier" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="sequenceNumber" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="type" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="eventIdentifier" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="metaData" type="BLOB" />
+			<column name="payload" type="BLOB">
+				<constraints nullable="false" />
+			</column>
+			<column name="payloadRevision" type="varchar(255)" />
+			<column name="payloadType" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="timeStamp" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey tableName="SnapshotEventEntry"
+			columnNames="aggregateIdentifier,sequenceNumber" />
+	</changeSet>
+
+	<changeSet id="domainevententry-create" author="kmtong">
+		<createTable tableName="DomainEventEntry">
+			<column name="globalIndex" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="aggregateIdentifier" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="sequenceNumber" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="type" type="varchar(255)" />
+			<column name="eventIdentifier" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="metaData" type="BLOB" />
+			<column name="payload" type="BLOB">
+				<constraints nullable="false" />
+			</column>
+			<column name="payloadRevision" type="varchar(255)" />
+			<column name="payloadType" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="timeStamp" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<addUniqueConstraint tableName="DomainEventEntry"
+			columnNames="aggregateIdentifier,sequenceNumber" />
+	</changeSet>
+
+	<!-- Resources / Attachments / Logos / Images -->
+	<changeSet id="resource-create" author="kmtong">
+		<createTable tableName="resource">
+			<!-- use UUID for resource ID, prevent resource scanning -->
+			<column name="id" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="contentType" type="varchar(255)" />
+			<column name="content" type="BLOB" />
+			<column name="ownerId" type="bigint" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="person-create" author="kmtong">
+		<createTable tableName="person">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="username" type="varchar(255)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="password" type="varchar(255)">
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="email" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="mobile" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="avatarResourceId" type="varchar(36)" />
+			<column name="realname" type="varchar(255)" />
+			<column name="sex" type="int" />
+			<column name="birthday" type="datetime" />
+			<column name="school" type="varchar(255)" />
+			<column name="qq" type="varchar(255)" />
+			<column name="wx" type="varchar(255)" />
+			<column name="isBindingEmail" type="int" />
+			<column name="passwordStrength" type="varchar(10)" />
+			<column name="infoCompletion" type="varchar(10)" />
+			<column name="walletId" type="varchar(36)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedby" type="varchar(255)" />
+			<column name="updatedat" type="datetime" />
+		</createTable>
+		<createIndex tableName="person" indexName="idx_person_username">
+			<column name="username" />
+		</createIndex>
+		<createIndex tableName="person" indexName="idx_person_login">
+			<column name="username" />
+			<column name="password" />
+		</createIndex>
+		<createIndex tableName="person" indexName="idx_person_email">
+			<column name="email" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="registration-create" author="kmtong">
+		<createTable tableName="registration">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="username" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="password" type="varchar(255)">
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="email" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="mobile" type="varchar(255)" />
+			<column name="validation_code" type="varchar(255)" />
+			<column name="personId" type="bigint">
+				<constraints foreignKeyName="fk_registration_personId"
+					referencedTableName="person" referencedColumnNames="id" />
+			</column>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+		<createIndex tableName="registration" indexName="idx_registration_username">
+			<column name="username" />
+		</createIndex>
+		<createIndex tableName="registration" indexName="idx_registration_login">
+			<column name="username" />
+			<column name="password" />
+		</createIndex>
+		<createIndex tableName="registration" indexName="idx_registration_email">
+			<column name="email" />
+		</createIndex>
+	</changeSet>
+
+	<changeSet id="corporate-create" author="kmtong">
+		<createTable tableName="corporate">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="website" type="varchar(255)">
+			</column>
+			<column name="address" type="varchar(255)">
+			</column>
+			<column name="logoResourceId" type="varchar(36)" />
+			<column name="hsCode" type="varchar(10)" />
+			<column name="creditCode" type="varchar(18)" />
+			<column name="customArea" type="varchar(10)" />
+			<column name="contactsName" type="varchar(255)" />
+			<column name="contactsSex" type="int" />
+			<column name="contactsDuties" type="varchar(255)" />
+			<column name="contactsMobile" type="varchar(255)" />
+			<column name="contactsTel" type="varchar(255)" />
+			<column name="corporateMark" type="varchar(255)" />
+			<column name="creditLevel" type="int" />
+			<column name="contactsEmail" type="varchar(100)" />
+			<column name="isPending" type="int"></column>
+			<column name="auditreason" type="varchar(255)" />
+			<column name="walletId" type="varchar(36)" />
+			<column name="isUpgrade" type="int" />
+			<column name="useNum" type="int" />
+			<column name="useStart" type="datetime" />
+			<column name="useEnd" type="datetime" />
+			<column name="industryType" type="int" />
+			<column name="industry" type="int" />
+			<column name="nature" type="int" />
+			<column name="province" type="int" />
+			<column name="city" type="int" />
+			<column name="businessLicense" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="staff-create" author="kmtong">
+		<createTable tableName="staff">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="personId" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="corporateId" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="personname" type="varchar(50)" />
+			<column name="jobnum" type="varchar(50)" />
+			<column name="sex" type="int" />
+			<column name="residenceaddress" type="varchar(255)" />
+			<column name="email" type="varchar(100)" />
+			<column name="mobile" type="varchar(50)" />
+			<column name="schoolrecord" type="varchar(50)" />
+			<column name="qualificationrecord" type="varchar(255)" />
+			<column name="advantage" type="varchar(255)" />
+			<column name="role" type="varchar(255)" />
+			<column name="blocked" type="boolean" defaultValueBoolean="false" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="invitation-create" author="kmtong">
+		<createTable tableName="invitation">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="invitationCode" type="varchar(36)" />
+			<column name="inviterCorpId" type="bigint">
+				<constraints nullable="false" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_invitation_inviterCorpId" />
+			</column>
+			<column name="inviterId" type="bigint">
+				<constraints nullable="false" referencedTableName="person"
+					referencedColumnNames="id" foreignKeyName="fk_invitation_personId" />
+			</column>
+			<column name="personId" type="bigint" />
+			<column name="username" type="varchar(50)" />
+			<column name="personname" type="varchar(50)" />
+			<column name="jobnum" type="varchar(50)" />
+			<column name="residenceaddress" type="varchar(255)" />
+			<column name="email" type="varchar(100)" />
+			<column name="mobile" type="varchar(50)" />
+			<column name="schoolrecord" type="varchar(50)" />
+			<column name="qualificationrecord" type="varchar(255)" />
+			<column name="advantage" type="varchar(255)" />
+			<column name="validation_code" type="varchar(255)" />
+			<column name="invitationType" type="int"></column>
+			<column name="accepted" type="boolean" defaultValueBoolean="false" />
+			<column name="acceptedAt" type="datetime" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="remark" type="varchar(255)" />
+			<column name="iscancel" type="boolean" defaultValueBoolean="false"/>
+		</createTable>
+	</changeSet>
+
+	<changeSet id="staff_invitation-create" author="kmtong">
+		<createTable tableName="staff_invitation">
+			<column name="invitationCode" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="staffId" type="bigint" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="team-create" author="kmtong">
+		<createTable tableName="team">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="corporateId" type="bigint">
+				<constraints nullable="false" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_team_corporateId" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="description" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="teamMember-create" author="kmtong">
+		<createTable tableName="teamMember">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="corporateId" type="bigint">
+				<constraints nullable="false" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_teamMember_corporateId" />
+			</column>
+			<column name="teamId" type="bigint">
+				<constraints nullable="false" referencedTableName="team"
+					referencedColumnNames="id" foreignKeyName="fk_teamMember_teamId" />
+			</column>
+			<column name="staffId" type="bigint">
+				<constraints nullable="false" referencedTableName="staff"
+					referencedColumnNames="id" foreignKeyName="fk_teamMember_staffId" />
+			</column>
+			<column name="role" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="Send_Binding_Email" author="yjm">
+		<createTable tableName="sendBindingEmail">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="personId" type="bigint">
+				<constraints foreignKeyName="fk_sendBindingEmail_personId"
+					referencedTableName="person" referencedColumnNames="id" />
+			</column>
+			<column name="bindingCode" type="varchar(255)" />
+			<column name="email" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="application_create" author="rcl">
+		<createTable tableName="application">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="appname" type="varchar(100)" />
+			<column name="clientid" type="varchar(36)" />
+			<column name="clientsecret" type="varchar(36)" />
+			<column name="scope" type="varchar(50)" />
+			<column name="callbackurl" type="varchar(500)" />
+			<column name="mainurl" type="varchar(500)" />
+			<column name="getInfoUrl" type="varchar(500)"/>
+			<column name="loginouturl" type="varchar(500)"/>
+			<column name="createdate" type="datetime" />
+			<column name="type" type="int" />
+			<column name="avatarresourceid" type="varchar(36)"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="certificate_create" author="rcl">
+		<createTable tableName="certificate">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="personid" type="bigint">
+				<constraints nullable="false" referencedTableName="person"
+					referencedColumnNames="id" foreignKeyName="fk_certificate_person_id" />
+			</column>
+			<column name="applicationid" type="bigint">
+				<constraints nullable="false" referencedTableName="application"
+					referencedColumnNames="id" foreignKeyName="fk_certificate_application_id" />
+			</column>
+			<column name="corporateid" type="bigint">
+				<constraints nullable="true" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_certificate_corporate_id" />
+			</column>
+			<column name="code" type="varchar(36)" />
+			<column name="codeexpiresdate" type="datetime" />
+			<column name="token" type="varchar(36)" />
+			<column name="tokenexpiresdate" type="datetime" />
+			<column name="refreshtoken" type="varchar(36)" />
+			<column name="isrefresh" type="boolean" />
+			<column name="createdate" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="corporaterole_create" author="rcl">
+		<createTable tableName="corporaterole">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="corporateid" type="bigint">
+				<constraints nullable="true" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_role_corporate_id" />
+			</column>
+			<column name="rolename" type="varchar(50)" />
+			<column name="description" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="corporateapplication_create" author="rcl">
+		<createTable tableName="corporateapplication">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="corporateid" type="bigint">
+				<constraints nullable="false" referencedTableName="corporate"
+					referencedColumnNames="id" foreignKeyName="fk_corporateapplication_corporate_id" />
+			</column>
+			<column name="applicationid" type="bigint">
+				<constraints nullable="false" referencedTableName="application"
+					referencedColumnNames="id" foreignKeyName="fk_corporateapplication_application_id" />
+			</column>
+			<column name="isFree" type="int" />
+			<column name="useStart" type="datetime" />
+			<column name="useEnd" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="personapplication_create" author="rcl">
+		<createTable tableName="personapplication">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="personid" type="bigint">
+				<constraints nullable="false" referencedTableName="person"
+					referencedColumnNames="id" foreignKeyName="fk_personapplication_person_id" />
+			</column>
+			<column name="applicationid" type="bigint">
+				<constraints nullable="false" referencedTableName="application"
+					referencedColumnNames="id" foreignKeyName="fk_personapplication_application_id" />
+			</column>
+			<column name="isFree" type="int"/>
+			<column name="useStart" type="datetime"/>
+			<column name="useEnd" type="datetime"/>	
+		</createTable>
+	</changeSet>
+	<changeSet id="order-create" author="yjm">
+		<createTable tableName="orderData">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="outTradeNo" type="varchar(32)"/>
+			<column name="body" type="varchar(255)"/>
+			<column name="payType" type="varchar(10)"/>
+			<column name="totalFee" type="double"/>
+			<column name="walletId" type="varchar(36)"/>
+			<column name="isPayed" type="int"/>
+			<column name="orderType" type="varchar(255)"/>
+			<column name="DateType" type="varchar(36)"/>
+			<column name="serviceType" type="varchar(36)"/>
+			<column name="behaviorType" type="varchar(36)"/>
+			<column name="isDelete" type="int"/>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="rechargeRecords-create" author="yjm">
+		<createTable tableName="rechargeRecords">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="serialNum" type="varchar(32)" />
+			<column name="walletId" type="varchar(36)" />
+			<column name="totalFee" type="double" />
+			<column name="isSuccess" type="int"/>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="expensesRecords-create" author="yjm">
+		<createTable tableName="expensesRecords">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="outTradeNo" type="varchar(32)" />
+			<column name="walletId" type="varchar(36)" />
+			<column name="body" type="varchar(255)" />
+			<column name="totalFee" type="double" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="message_create" author="rcl">
+		<createTable tableName="message">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="content" type="varchar(255)" />
+			<column name="belongtype" type="int" />
+			<column name="messagetype" type="int" />
+			<column name="opertiontype" type="int" />
+			<column name="personid" type="bigint" />
+			<column name="corporateid" type="bigint" />
+			<column name="accesstype" type="int" />
+			<column name="isread" type="BOOLEAN" />
+			<column name="isdelete" type="BOOLEAN" />
+			<column name="createdAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="messageopertiondetail_create" author="rcl">
+		<createTable tableName="messageopertiondetail">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="messageid" type="bigint">
+				<constraints nullable="false" referencedTableName="message"
+					referencedColumnNames="id" foreignKeyName="fk_messageopertiondetail_message_id" />
+			</column>
+			<column name="linktxt" type="varchar(50)" />
+			<column name="linkurl" type="varchar(255)" />
+			<column name="linkclass" type="varchar(50)" />
+		</createTable>
+	</changeSet>
+	<changeSet id="messageaffichedetail_create" author="rcl">
+		<createTable tableName="messageaffichedetail">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="messageid" type="bigint">
+				<constraints nullable="false" referencedTableName="message"
+					referencedColumnNames="id" foreignKeyName="fk_messageaffichedetail_message_id" />
+			</column>
+			<column name="content" type="varchar(2000)" />
+		</createTable>
+	</changeSet>
+	<changeSet id="wallet-create" author="yjm">
+		<createTable tableName="wallet">
+			<column name="id" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="balance" type="double" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="applicationmodule_create" author="rcl">
+		<createTable tableName="applicationmodule">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="applicationid" type="bigint" />
+			<column name="modulename" type="varchar(100)" />
+			<column name="createdate" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="moduleoperation_create" author="rcl">
+		<createTable tableName="moduleoperation">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="applicationid" type="bigint" />
+			<column name="moduleid" type="bigint" />
+			<column name="operationname" type="varchar(100)" />
+			<column name="createdate" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="roleoperation_create" author="rcl">
+		<createTable tableName="roleoperation">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="roleid" type="bigint" />
+			<column name="voucherid" type="bigint"/>
+			<column name="applicationid" type="bigint" />
+			<column name="moduleid" type="bigint" />
+			<column name="operationid" type="bigint" />
+			<column name="createdate" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="roleStaff-create" author="yjm">
+		<createTable tableName="roleStaff">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="roleId" type="bigint" />
+			<column name="staffId" type="bigint" />
+			<column name="corporateId" type="bigint" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="serialNumber-create" author="yjm">
+		<createTable tableName="serialNumber">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="nid" type="varchar(25)" />
+		</createTable>
+	</changeSet>
+	<changeSet id="module-create" author="yjm">
+		<createTable tableName="module">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="moduleName" type="varchar(255)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="roleModule-create" author="yjm">
+		<createTable tableName="roleModule">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="roleId" type="bigint" />
+			<column name="moduleId" type="bigint" />
+			<column name="corporateId" type="bigint" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="currsession_create" author="rcl">
+		<createTable tableName="currsession">
+			<column name="sessionid" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="personid" type="bigint" />
+			<column name="content" type="BLOB" />
+		</createTable>
+	</changeSet>
+	<changeSet id="messagerelation_create" author="rcl">
+		<createTable tableName="messagerelation">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="messageid" type="bigint" />
+			<column name="sourceid" type="bigint" />
+			<column name="sourcetype" type="int" />
+		</createTable>
+	</changeSet>
+	<changeSet id="orderDetails-create" author="yjm">
+		<createTable tableName="orderDetails">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="orderId" type="bigint"/>
+			<column name="productId" type="bigint"/>
+			<column name="useNum" type="int"/>
+			<column name="usePeriod" type="varchar(36)"/>
+			<column name="price" type="double"/>
+			<column name="applicationcost" type="decimal(18,4)"/>
+			<column name="personcost" type="decimal(18,4)"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="trade-create" author="yjm">
+		<createTable tableName="trade">
+			<column name="id" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="behaviorType" type="varchar(36)"/>
+			<column name="walletId" type="varchar(36)" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />	
+		</createTable>
+	</changeSet>
+	<changeSet id="tradeDetails-create" author="yjm">
+		<createTable tableName="tradeDetails">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="tradeId" type="varchar(36)"/>
+			<column name="productId" type="bigint"/>
+			<column name="useNum" type="int"/>
+			<column name="usePeriod" type="varchar(36)"/>
+			<column name="price" type="double"/>
+			<column name="applicationcost" type="decimal(18, 4)"/>
+			<column name="personcost" type="decimal(18, 4)"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="voucher-create" author="yjm">
+		<createTable tableName="voucher">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="voucherNo" type="varchar(12)"/>
+			<column name="orderId" type="bigint"/>
+			<column name="snapshotId" type="bigint"/>
+			<column name="useNum" type="int"/>
+			<column name="usePeriod" type="varchar(36)"/>
+			<column name="startTime" type="datetime"/>
+			<column name="endTime" type="datetime"/>
+			<column name="walletId" type="varchar(36)" />
+			<column name="productId" type="bigint"/>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+
+	<changeSet id="product_create" author="rcl">
+		<createTable tableName="product">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="productname" type="varchar(50)" />
+			<column name="type" type="int" />
+			<column name="status" type="int" />
+			<column name="remark" type="varchar(255)" />
+			<column name="createdt" type="datetime" />
+			<column name="avatarresourceid" type="varchar(36)"/>
+			<column name="description" type="varchar(100)"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="productappmodule_create" author="rcl">
+		<createTable tableName="productappmodule">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="productid" type="bigint" />
+			<column name="applicationid" type="bigint" />
+			<column name="applicationmoduleid" type="bigint" />
+		</createTable>
+	</changeSet>
+	<changeSet id="productprice_create" author="rcl">
+		<createTable tableName="productprice">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="productid" type="bigint" />
+			<column name="personnum" type="int" />
+			<column name="usetime" type="int" />
+			<column name="applicationcost" type="decimal(18, 4)" />
+			<column name="personcost" type="decimal(18, 4)" />
+		</createTable>
+	</changeSet>
+	<changeSet id="adminresource_create" author="rcl">
+		<createTable tableName="adminresource">
+			<column name="id" type="varchar(36)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)" />
+			<column name="contentType" type="varchar(255)" />
+			<column name="content" type="BLOB" />
+			<column name="ownerId" type="bigint" />
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="snapshot-create" author="yjm">
+		<createTable tableName="snapshot">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="snapshotApplication-create" author="yjm">
+		<createTable tableName="snapshotApplication">
+			<column name="applicationId" type="bigint"/>
+			<column name="snapshotId" type="bigint"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="snapshotApplicationModule_create" author="rcl">
+		<createTable tableName="snapshotApplicationModule">
+			<column name="moduleId" type="bigint"/>
+			<column name="applicationId" type="bigint" />
+			<column name="moduleName" type="varchar(100)" />
+			<column name="snapshotId" type="bigint"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="snapshotModuleOperation_create" author="rcl">
+		<createTable tableName="snapshotModuleOperation">
+			<column name="operationId" type="bigint" />
+			<column name="applicationId" type="bigint" />
+			<column name="moduleId" type="bigint" />
+			<column name="operationName" type="varchar(100)" />
+			<column name="snapshotId" type="bigint"/>
+		</createTable>
+	</changeSet>
+	<changeSet id="bill-create" author="yjm">
+		<createTable tableName="bill">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="billNo" type="varchar(36)"/>
+			<column name="orderId" type="bigint"/>
+			<column name="money" type="double"/>
+			<column name="source" type="bigint"/>
+			<column name="target" type="bigint"/>
+			<column name="tradeType" type="varchar(255)"/>
+			<column name="payType" type="varchar(10)"/>
+			<column name="billType" type="varchar(10)"/>
+			<column name="walletId" type="varchar(36)" />
+			<column name="userName" type="varchar(255)"/>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="financeAccount" author="yjm">
+		<createTable tableName="financeAccount">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="financeAccountName" type="varchar(100)"/>
+			<column name="financeAccountNo" type="varchar(100)"/>
+			<column name="flag" type="varchar(10)"/>
+			<column name="createdBy" type="varchar(255)" />
+			<column name="createdAt" type="datetime" />
+			<column name="updatedBy" type="varchar(255)" />
+			<column name="updatedAt" type="datetime" />		
+		</createTable>
+	</changeSet>
+	<changeSet id="salespromotion_create" author="rcl">
+		<createTable tableName="salespromotion">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="spname" type="varchar(100)" />
+			<column name="begindate" type="datetime" />
+			<column name="enddate" type="datetime" />
+			<column name="saletype" type="int" />
+			<column name="state" type="int" />
+			<column name="type" type="int" />
+			<column name="showstate" type="boolean" />
+			<column name="createdBy" type="varchar(100)" />
+			<column name="createdAt" type="datetime" />
+		</createTable>
+	</changeSet>
+	<changeSet id="giftmain_create" author="rcl">
+		<createTable tableName="giftmain">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="salespromotionid" type="bigint" />
+			<column name="eventid" type="bigint" />
+			<column name="promotiontitle" type="varchar(100)" />
+			<column name="gifttype" type="int" />
+		</createTable>
+	</changeSet>
+	<changeSet id="giftproduct_create" author="rcl">
+		<createTable tableName="giftproduct">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="giftmainid" type="bigint" />
+			<column name="productid" type="bigint" />
+			<column name="personnum" type="int" />
+			<column name="duration" type="int" />
+		</createTable>
+	</changeSet>
+	<changeSet id="businessevent_create" author="rcl">
+		<createTable tableName="businessevent">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="eventname" type="varchar(100)" />
+			<column name="sign" type="varchar(100)" />
+			<column name="description" type="varchar(255)" />
+			<column name="state" type="int" />
+			<column name="businesstype" type="int" />
+		</createTable>
+		<loadData tableName="businessevent" file="testdata/businessevent.csv"/>
+	</changeSet>
+</databaseChangeLog>
+
